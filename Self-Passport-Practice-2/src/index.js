@@ -11,5 +11,10 @@ app.listen(3000,async()=>{
     await connect();
     console.log('MongoDb connected');
    
-
+    const user=await User.create({
+        name:"Chand",
+        email:"Chand123@gmail.com",
+        password:"chand@1234",
+    })
+    console.log(user);
 })
