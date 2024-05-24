@@ -7,7 +7,8 @@ exports.initializingPassport=(passport)=>{
 
     passport.use(new LocalStrategy(async(username,password,done)=>{
    try {
-    const user=userRepo.find({username});
+    const user=await userRepo.find({username});
+    console.log("user",user);
    
     if(!user){
         return done(null,false);
@@ -42,4 +43,16 @@ passport.deserializeUser(async(id,done)=>{
     }
 })
 
+}
+
+
+
+
+
+//Other from Initializing Passport 
+
+exports.isAuthenticated=(req,res,next)=>{
+    if(req.user){return next()}
+
+    res.redirect('/login');
 }

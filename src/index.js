@@ -5,7 +5,7 @@ const UserRepository=require('../repository/user-repository');
 const ejs=require('ejs');
 const app=express();
 const passport=require('passport')
-const { initializingPassport } = require('../passportConfig');
+const { initializingPassport,isAuthenticated } = require('../passportConfig');
 const expressSession=require('express-session');
 
 
@@ -17,10 +17,10 @@ initializingPassport(passport);
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
+app.use(expressSession({secret:'Secret',resave:false,saveUninitialized:false}))
 
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(expressSession({secret:'Secret',resave:false,saveUninitialized:false}))
 
 
 
@@ -38,7 +38,9 @@ app.get('/login',(req,res)=>{
 app.get('/register',async(req,res)=>{
     res.render('register');
 })
-
+app.get('/pradum',async(req,res)=>{
+    res.render('pradum');
+})
 app.get('/register',async(req,res)=>{
     res.render('register');
 })
@@ -59,7 +61,17 @@ app.post("/register",async(req,res)=>{
     return res.status(201).send(newUser);
 })
 
+app.post('/login',passport.authenticate('local',{failureRedirect:"/register",successRedirect:"/pradum"}),(req,res)=>{
 
+})
+app.get('/profile',isAuthenticated,(req,res)=>{
+    res.send(req.user);
+})
+
+app.get('/logout',(req,res)=>{
+    req.logOut();
+    res.redirect("/");
+})
 app.listen(3000,()=>{
     console.log("Listening on Port 3000");
    

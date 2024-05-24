@@ -10,11 +10,11 @@ class UserRepository{
         }
     }
 
-    async find(username){
+    async find({username}){
         try {
             const user=await User.find({
                 username:username
-            })
+            });
             return user;
         } catch (error) {
             console.log(error);
