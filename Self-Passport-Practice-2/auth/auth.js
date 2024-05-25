@@ -1,6 +1,10 @@
 import passport from "passport";
 import passportLocal from "passport-local";
 import User from "../model/User";
+import passportJWT from "passport-jwt";
+import jwt from "jsonwebtoken";
+const JWTStrategy=passportJWT.Strategy;
+const ExtractJWT=passportJWT.ExtractJwt;
 
 const localStrategy=passportLocal.Strategy;
 
@@ -50,5 +54,22 @@ async (email,password,done)=>{
 
 
 
+
+))
+
+
+//Verifying the token
+passport.use(new JWTStrategy({
+    secretOrKey:'TOP_SECRET',
+    jwtFromRequest:ExtractJWT.fromUrlQueryParameter('secret-token')
+},
+
+async(token,done)=>{
+    try {
+        return done(null,token.user);
+    } catch (error) {
+        done(error);
+    }
+}
 
 ))
